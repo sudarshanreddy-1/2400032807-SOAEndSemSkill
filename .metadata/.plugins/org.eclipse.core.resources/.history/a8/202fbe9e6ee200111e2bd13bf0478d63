@@ -1,0 +1,66 @@
+package soa.controller;
+
+import java.util.List;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import soa.model.Driver;
+import soa.service.DriverService;
+
+
+@RestController
+@RequestMapping("/api/books")
+public class DriverController {
+
+    DriverService BS;
+
+    public DriverController(DriverService BS) {
+        this.BS = BS;
+    }
+
+    @PostMapping
+    public ResponseEntity<Driver> addBook(@RequestBody Driver driver) {
+    	
+    	String message = BS.addBook(driver);
+        return new ResponseEntity(message,HttpStatus.CREATED);
+    }
+    
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteBook(@PathVariable Long id) {
+    	BS.deleteBook(id);
+    	return ResponseEntity.ok("Book deleted successfully");
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Driver> updateBook(
+    		@PathVariable Long id,
+    		@RequestBody Driver driver) {
+    	
+    	Driver updatedBook=BS.updateBook(id, driver);
+    	return ResponseEntity.ok(updatedBook);
+    }
+    
+    @GetMapping
+    public ResponseEntity<List<Driver>> getAllBooks() {
+    	
+    	List<Driver> drivers=BS.getAllBooks();
+        return ResponseEntity.ok(drivers);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Driver> getBookById(@PathVariable Long id) {
+    	Driver driver = BS.getBookById(id);
+    	return ResponseEntity.ok(driver);
+        
+    }
+
+}

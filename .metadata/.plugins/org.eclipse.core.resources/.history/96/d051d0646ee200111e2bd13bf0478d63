@@ -1,0 +1,65 @@
+package soa.service;
+
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import soa.model.Driver;
+import soa.repo.BookRepo;
+
+@Service
+public class BookService {
+
+	
+	BookRepo BR;
+	
+	public BookService(BookRepo BR) {
+		this.BR=BR;
+	}
+	
+	public String addBook(Driver driver) {
+		
+		BR.save(driver);
+		return "Book added succesfully";
+	}
+	
+	public List<Driver> getAllBooks(){
+		
+		return BR.findAll();
+	}
+	
+	public Driver getBookById(Long id) {
+		
+		return BR.findById(id).orElse(null);
+	}
+	
+	public String deleteBook(Long id) {
+		
+		
+		if (BR.existsById(id)) {
+			
+			BR.deleteById(id);
+			return "Book deleted succesfully";
+		}
+		
+		return "Book not found";
+		
+	}
+	
+	public Driver updateBook(Long id, Driver driver) {
+		
+		Driver existingBook = BR.findById(id).orElse(null);
+		
+		if (existingBook!=null) {
+			
+			existingBook.setTitle(driver.getTitle());
+			existingBook.setAuthor(driver.getAuthor());
+			existingBook.setIsbn(driver.getIsbn());
+			return BR.save(existingBook);
+			
+		}
+		return null;
+		
+	}
+	
+}

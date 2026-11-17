@@ -1,0 +1,60 @@
+package soa.service;
+
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import soa.model.Driver;
+import soa.repo.DriverRepo;
+
+@Service
+public class DriverService {
+
+    DriverRepo DR;
+
+    public DriverService(DriverRepo DR) {
+        this.DR = DR;
+    }
+
+    // Add Driver
+    public Driver addDriver(Driver driver) {
+        return DR.save(driver);
+    }
+
+    // Get All Drivers
+    public List<Driver> getAllDrivers() {
+        return DR.findAll();
+    }
+
+    // Get Driver By ID
+    public Driver getDriverById(Long id) {
+        return DR.findById(id).orElse(null);
+    }
+
+    // Delete Driver
+    public String deleteDriver(Long id) {
+
+        if (DR.existsById(id)) {
+            DR.deleteById(id);
+            return "Driver deleted successfully";
+        }
+
+        return "Driver not found";
+    }
+
+    // Update Driver
+    public Driver updateDriver(Long id, Driver driver) {
+
+        Driver existingDriver = DR.findById(id).orElse(null);
+
+        if (existingDriver != null) {
+
+            existingDriver.setName(driver.getName());
+            existingDriver.setRatings(driver.getRatings());
+
+            return DR.save(existingDriver);
+        }
+
+        return null;
+    }
+}

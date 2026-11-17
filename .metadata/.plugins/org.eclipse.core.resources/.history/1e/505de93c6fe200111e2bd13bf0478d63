@@ -1,0 +1,54 @@
+package soa.controller;
+
+import java.util.List;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import soa.model.Driver;
+import soa.service.DriverService;
+
+@RestController
+@RequestMapping("/api/drivers")
+public class DriverController {
+
+    DriverService DS;
+
+    public DriverController(DriverService DS) {
+        this.DS = DS;
+    }
+
+    @PostMapping
+    public ResponseEntity<String> addDriver(@RequestBody Driver driver) {
+        String message = DS.addDriver(driver);
+        return new ResponseEntity<>(message, HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteDriver(@PathVariable Long id) {
+        DS.deleteDriver(id);
+        return ResponseEntity.ok("Driver deleted successfully");
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Driver> updateDriver(
+            @PathVariable Long id,
+            @RequestBody Driver driver) {
+
+        Driver updatedDriver = DS.updateDriver(id, driver);
+        return ResponseEntity.ok(updatedDriver);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Driver>> getAllDrivers() {
+        List<Driver> drivers = DS.getAllDrivers();
+        return ResponseEntity.ok(drivers);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Driver> getDriverById(@PathVariable Long id) {
+        Driver driver = DS.getDriverById(id);
+        return ResponseEntity.ok(driver);
+    }
+}
